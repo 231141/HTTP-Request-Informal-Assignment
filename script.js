@@ -21,7 +21,7 @@ function applyInputs() {
   const communicationContainer = document.getElementById(
     "communication-container"
   );
-  communicationContainer.innerHTML = ""; // Clear previous messages
+  communicationContainer.innerHTML = ""; 
 
   let isValid = true;
   let message = "";
@@ -38,7 +38,7 @@ function applyInputs() {
   if (!hasUppercase || !hasNumber) {
     isValid = false;
     message +=
-      "Password must contain at least one uppercase letter and one number.<br>";
+      "Password must have at least one uppercase letter and one number.<br>";
   }
 
   if (isValid) {
