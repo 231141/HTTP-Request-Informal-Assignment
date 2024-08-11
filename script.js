@@ -1,8 +1,8 @@
 document
-  .getElementById("applicationButton")
+  .getElementById("applyButton")
   .addEventListener("click", applyInputs);
 document
-  .getElementById("drawInformationButton")
+  .getElementById("getDataButton")
   .addEventListener("click", () => {
     if (applyInputs()) {
       drawAmazonData()
@@ -24,36 +24,34 @@ function applyInputs() {
   communicationContainer.innerHTML = ""; 
 
   let isValid = true;
-  let message = "";
+  let EnterMessage = "";
 
-  // Email corrector
   if (!email.endsWith("@gmail.com")) {
     isValid = false;
-    message += "Email must end with @gmail.com.<br>";
+    EnterMessage += "Email must end with @gmail.com.<br>";
   }
 
-  // Password corrector
+
   const hasUppercase = /[A-Z]/.test(password);
   const hasNumber = /\d/.test(password);
   if (!hasUppercase || !hasNumber) {
     isValid = false;
-    message +=
+    EnterMessage +=
       "Password must have at least one uppercase letter and one number.<br>";
   }
 
   if (isValid) {
-    message = "Validation successful!";
+    EnterMessage = "You have been logged in!";
     communicationContainer.className = "success-message";
   } else {
-    communicationContainer.className = "error-message";
+    communicationContainer.className = "bad-message";
   }
 
-  communicationContainer.innerHTML = message;
+  communicationContainer.innerHTML = EnterMessage;
   return isValid;
 }
 
 function drawAmazonData() {
-  // Create headers
   const myHeaders = new Headers();
   myHeaders.append(
     "x-apihub-key",
@@ -62,19 +60,17 @@ function drawAmazonData() {
   myHeaders.append("x-apihub-host", "Real-Time-Amazon-Data.allthingsdev.co");
   myHeaders.append("x-apihub-endpoint", "41654d76-eaf5-4690-9d46-d88b1665322e");
 
-  // Create request options
   const requestOptions = {
     method: "GET",
     headers: myHeaders,
     redirect: "follow",
   };
 
-  // Perform fetch request
   return fetch(
     "https://Real-Time-Amazon-Data.proxy-production.allthingsdev.co/v2/search?query=Phone&page=1&country=US&sort_by=RELEVANCE&product_condition=ALL&category_id=null&min_price=105&max_price=110&brand=null",
     requestOptions
   )
-    .then((response) => response.json()) // Parse JSON directly
+    .then((response) => response.json())
     .then((result) => {
       console.log(result);
       return result;
@@ -86,37 +82,36 @@ function drawAmazonData() {
 }
 
 function displayData(data) {
-  const infoContainer = document.getElementById("info-container"); // Checked to see if it matches the HTML ID
+  const infoContainer = document.getElementById("info-container");
   const communicationContainer = document.getElementById(
     "communication-container"
   );
-  infoContainer.innerHTML = ""; // Clear previous content
-  communicationContainer.innerHTML = ""; // Clear previous messages
+  infoContainer.innerHTML = ""; 
+  communicationContainer.innerHTML = ""; 
 
   if (!data.success) {
-    // Shows error message
-    const errorMessage = document.createElement("p");
-    errorMessage.textContent = data.message;
-    errorMessage.className = "error-message";
-    communicationContainer.appendChild(errorMessage);
+    const wrongMessage = document.createElement("p");
+    wrongMessage.textContent = data.message;
+    wrongMessage.className = "bad-message";
+    communicationContainer.appendChild(wrongMessage);
     return;
   }
 
-  // shows the first two items (adjust according to actual structure)
   for (let i = 0; i < 2; i++) {
     if (data[i]) {
-      const resultElement = document.createElement("div");
-      resultElement.className = "result-item";
+      const answerElement = document.createElement("div");
+      answerElement.className = "displayed-item";
 
       const title = document.createElement("h2");
       title.textContent = data[i].title || "N/A";
-      resultElement.appendChild(title);
+      answerElement.appendChild(title);
 
       const details = document.createElement("p");
-      details.textContent = `Price: ${data[i].price || "N/A"}`; // Goes according to actual structure
-      resultElement.appendChild(details);
+      details.textContent = `Price: ${data[i].price || "N/A"}`;
+      answerElement.appendChild(details);
 
-      infoContainer.appendChild(resultElement); // Checked if it matches HTML ID
+      infoContainer.appendChild(answerElement); 
     }
   }
+  
 }
