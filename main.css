@@ -58,10 +58,12 @@ body {
 
 .success-message {
     color: #28a745;
+    height: 100px;
 }
 
 .bad-message {
     color: #FF0000;
+    height: 100px;
 }
 
 
